@@ -1,0 +1,14 @@
+# robots.txt for Tony Tools
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://tonychou-tech.github.io/tony/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 1
+
+# Disallow admin or config paths if any
+Disallow: /admin/
+Disallow: /*.json$

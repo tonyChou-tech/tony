@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import SEO from "../components/SEO";
 
 function Home() {
   const { t } = useTranslation();
@@ -104,7 +105,14 @@ function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-dark-bg">
+    <>
+      <SEO
+        title="線上工具集 - 免費 PDF、圖片、文件處理工具"
+        description="免費線上工具集，提供 PDF 轉圖片、PDF 合併壓縮、圖片壓縮轉檔裁切、Excel 轉 CSV、匯率換算、JSON 格式化、Base64 編解碼、QR Code 生成等實用工具。完全免費，無需註冊，保護隱私，本地處理。"
+        keywords="線上工具,PDF轉圖片,PDF合併,PDF壓縮,圖片壓縮,圖片轉檔,圖片裁切,Excel轉CSV,匯率換算,JSON格式化,Base64,QR Code,免費工具,線上轉檔"
+        path="/"
+      />
+      <div className="min-h-screen bg-dark-bg">
       {/* Hero Section with Gradient Background */}
       <div className="relative overflow-hidden">
         {/* Gradient Background */}
@@ -201,6 +209,7 @@ function Home() {
         ))}
       </div>
     </div>
+    </>
   );
 }
 
