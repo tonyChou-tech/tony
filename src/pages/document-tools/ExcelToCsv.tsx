@@ -1,51 +1,89 @@
 import { useState, ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
+import * as XLSX from 'xlsx'
 import AdBanner from '../../components/AdBanner'
 
 function ExcelToCsv() {
   const { t } = useTranslation()
   const [file, setFile] = useState<File | null>(null)
   const [status, setStatus] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [sheets, setSheets] = useState<string[]>([])
+  const [selectedSheet, setSelectedSheet] = useState<string>('')
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0]
     if (selectedFile && (
       selectedFile.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
       selectedFile.type === 'application/vnd.ms-excel' ||
-      selectedFile.name.endsWith('.csv')
+      selectedFile.name.endsWith('.xlsx') ||
+      selectedFile.name.endsWith('.xls')
     )) {
       setFile(selectedFile)
       setStatus('')
+      setSheets([])
+      setSelectedSheet('')
+      loadSheetNames(selectedFile)
     } else {
       setStatus(t('errors.invalidFile'))
     }
   }
 
-  const handleConvert = () => {
+  const loadSheetNames = async (file: File) => {
+    try {
+      const data = await file.arrayBuffer()
+      const workbook = XLSX.read(data, { type: 'array' })
+      const sheetNames = workbook.SheetNames
+      setSheets(sheetNames)
+      setSelectedSheet(sheetNames[0] || '')
+    } catch (error) {
+      console.error('Error loading sheet names:', error)
+      setStatus('無法讀取工作表')
+    }
+  }
+
+  const handleConvert = async () => {
     if (!file) {
       setStatus(t('errors.fileRequired'))
       return
     }
 
-    // 基本的 CSV 讀取（如果上傳的是 CSV）
-    if (file.name.endsWith('.csv')) {
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        const text = e.target?.result
-        if (!text || typeof text !== 'string') return
-        const blob = new Blob([text], { type: 'text/csv' })
-        const url = URL.createObjectURL(blob)
-        const link = document.createElement('a')
-        link.href = url
-        link.download = file.name
-        link.click()
-        URL.revokeObjectURL(url)
-        setStatus('CSV 文件已下載')
+    if (!selectedSheet) {
+      setStatus('請選擇要轉換的工作表')
+      return
+    }
+
+    setLoading(true)
+    setStatus(t('common.processing'))
+
+    try {
+      const data = await file.arrayBuffer()
+      const workbook = XLSX.read(data, { type: 'array' })
+      const worksheet = workbook.Sheets[selectedSheet]
+
+      if (!worksheet) {
+        throw new Error('找不到選擇的工作表')
       }
-      reader.readAsText(file)
-    } else {
-      // Excel 轉 CSV 需要額外的庫（如 xlsx）
-      setStatus('Excel 轉 CSV 功能需要安裝 xlsx 庫。此處為簡化版本。')
+
+      // 轉換為 CSV
+      const csv = XLSX.utils.sheet_to_csv(worksheet)
+
+      // 創建並下載 CSV 文件
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = file.name.replace(/\.(xlsx?|xls)$/i, '.csv')
+      link.click()
+
+      URL.revokeObjectURL(url)
+      setStatus(t('common.success'))
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : t('errors.unknownError')
+      setStatus(t('errors.processingFailed', { message: errorMessage }))
+      console.error(error)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -61,11 +99,11 @@ function ExcelToCsv() {
           <input
             type="file"
             id="excel-file"
-            accept=".xls,.xlsx,.csv"
+            accept=".xls,.xlsx"
             onChange={handleFileChange}
           />
           <label htmlFor="excel-file" className="file-input-label">
-            {t('documentTools.excelToCsv.title')}
+            {t('documentTools.excelToCsv.selectFile')}
           </label>
         </div>
 
@@ -76,8 +114,35 @@ function ExcelToCsv() {
           </div>
         )}
 
-        <button onClick={handleConvert} disabled={!file}>
-          {t('documentTools.excelToCsv.title')}
+        {sheets.length > 0 && (
+          <div style={{ marginTop: '1rem' }}>
+            <label htmlFor="sheet-select" style={{ display: 'block', marginBottom: '0.5rem' }}>
+              選擇工作表：
+            </label>
+            <select
+              id="sheet-select"
+              value={selectedSheet}
+              onChange={(e) => setSelectedSheet(e.target.value)}
+              style={{
+                padding: '0.5rem',
+                fontSize: '1rem',
+                borderRadius: '4px',
+                border: '1px solid #ccc',
+                width: '100%',
+                maxWidth: '300px'
+              }}
+            >
+              {sheets.map((sheet) => (
+                <option key={sheet} value={sheet}>
+                  {sheet}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        <button onClick={handleConvert} disabled={!file || !selectedSheet || loading}>
+          {loading ? t('common.processing') : t('documentTools.excelToCsv.convert')}
         </button>
 
         {status && (
@@ -90,18 +155,11 @@ function ExcelToCsv() {
           <h3>功能說明</h3>
           <ul>
             <li>支援 Excel 文件 (.xls, .xlsx)</li>
+            <li>可選擇特定工作表進行轉換</li>
             <li>輸出為 CSV 格式</li>
             <li>CSV 格式可被大多數程式讀取</li>
+            <li>所有處理都在瀏覽器本地完成</li>
           </ul>
-        </div>
-
-        <div className="info-box" style={{ marginTop: '1rem', background: '#e3f2fd', border: '1px solid #2196f3' }}>
-          <h3>提示</h3>
-          <p>完整的 Excel 轉 CSV 功能需要安裝 xlsx 庫：</p>
-          <pre style={{ background: '#263238', color: '#fff', padding: '1rem', borderRadius: '4px', overflow: 'auto' }}>
-            npm install xlsx
-          </pre>
-          <p>然後可以使用 XLSX.read() 和 XLSX.utils.sheet_to_csv() 來實現轉換</p>
         </div>
       </div>
 

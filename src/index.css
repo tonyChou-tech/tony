@@ -9,28 +9,28 @@
 
   body {
     @apply m-0 min-w-[320px] min-h-screen;
-    @apply bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100;
+    @apply bg-dark-bg text-gray-100;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
       'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
       sans-serif;
   }
 
   h1 {
-    @apply text-4xl font-bold mb-4;
+    @apply text-4xl font-bold mb-4 text-white;
   }
 
   h2 {
-    @apply text-3xl font-semibold mb-3;
+    @apply text-3xl font-semibold mb-3 text-white;
   }
 
   h3 {
-    @apply text-2xl font-semibold mb-2;
+    @apply text-2xl font-semibold mb-2 text-gray-200;
   }
 
   button {
     @apply rounded-lg border border-transparent px-5 py-3 text-base font-medium;
-    @apply bg-gray-100 dark:bg-gray-800 cursor-pointer transition-colors;
-    @apply hover:border-primary focus:outline-none focus:ring-4 focus:ring-primary/50;
+    @apply bg-dark-surface text-gray-200 cursor-pointer transition-colors;
+    @apply hover:border-primary hover:bg-dark-accent focus:outline-none focus:ring-4 focus:ring-primary/50;
     @apply disabled:opacity-50 disabled:cursor-not-allowed;
   }
 }
@@ -41,8 +41,8 @@
   }
 
   .tool-card {
-    @apply bg-gray-50 dark:bg-gray-800 rounded-lg p-8 mb-8;
-    @apply shadow-md hover:shadow-lg transition-shadow;
+    @apply bg-dark-surface border border-gray-700 rounded-lg p-8 mb-8;
+    @apply shadow-md hover:shadow-lg hover:border-gray-600 transition-all;
   }
 
   .file-input-wrapper {
@@ -54,33 +54,33 @@
   }
 
   .file-input-label {
-    @apply inline-block px-5 py-3 bg-primary text-white rounded-lg cursor-pointer;
+    @apply inline-block px-5 py-3 bg-primary text-dark-bg rounded-lg cursor-pointer font-medium;
     @apply transition-colors hover:bg-primary-hover;
   }
 
   .ad-container {
     @apply my-8 min-h-[90px] flex items-center justify-center;
-    @apply bg-gray-100 dark:bg-gray-800 rounded;
+    @apply bg-dark-surface border border-gray-700 rounded;
   }
 
   .status-message {
-    @apply mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800;
-    @apply rounded-lg text-blue-900 dark:text-blue-200;
+    @apply mt-4 p-4 bg-primary/10 border border-primary/30;
+    @apply rounded-lg text-primary;
   }
 
   .file-info {
-    @apply mt-4 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg;
+    @apply mt-4 p-4 bg-dark-surface border border-gray-700 rounded-lg text-gray-300;
   }
 
   .info-box {
-    @apply mt-8 p-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg;
+    @apply mt-8 p-6 bg-dark-surface border border-gray-700 rounded-lg;
   }
 
   .info-box h3 {
-    @apply text-xl font-semibold mb-3 text-blue-900 dark:text-blue-200;
+    @apply text-xl font-semibold mb-3 text-primary;
   }
 
   .info-box ul {
-    @apply list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300;
+    @apply list-disc list-inside space-y-2 text-gray-300;
   }
 }

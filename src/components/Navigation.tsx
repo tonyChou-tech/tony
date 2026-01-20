@@ -55,7 +55,6 @@ function Navigation() {
       id: 'pdf',
       label: t('navigation.pdfTools'),
       items: [
-        { to: '/pdf-tools/pdf-to-word', label: t('pdfTools.pdfToWord.title') },
         { to: '/pdf-tools/pdf-to-image', label: t('pdfTools.pdfToImage.title') },
         { to: '/pdf-tools/merge-pdf', label: t('pdfTools.mergePdf.title') },
         { to: '/pdf-tools/compress-pdf', label: t('pdfTools.compressPdf.title') },
@@ -74,7 +73,6 @@ function Navigation() {
       id: 'document',
       label: t('navigation.documentTools'),
       items: [
-        { to: '/document-tools/word-to-pdf', label: t('documentTools.wordToPdf.title') },
         { to: '/document-tools/excel-to-csv', label: t('documentTools.excelToCsv.title') },
       ],
     },
@@ -90,13 +88,13 @@ function Navigation() {
   ]
 
   return (
-    <nav className="bg-gray-900 shadow-lg sticky top-0 z-50">
+    <nav className="bg-dark-bg/95 backdrop-blur-sm border-b border-gray-800 shadow-lg sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-14 sm:h-16">
           {/* Logo */}
           <Link
             to="/"
-            className="text-lg sm:text-xl lg:text-2xl font-bold text-primary hover:text-primary-hover transition-colors flex-shrink-0"
+            className="text-lg sm:text-xl lg:text-2xl font-black text-primary hover:text-primary-hover transition-colors flex-shrink-0"
             onClick={closeMobileMenu}
           >
             {t('home.title')}
@@ -115,14 +113,14 @@ function Navigation() {
                   {navItem.label}
                 </span>
                 <ul
-                  className={`absolute top-full left-0 bg-gray-800 min-w-[200px] list-none p-2 rounded shadow-xl
+                  className={`absolute top-full left-0 bg-dark-surface border border-gray-700 min-w-[200px] list-none p-2 rounded shadow-xl
                     ${openDropdown === navItem.id ? 'block' : 'hidden'} group-hover:block`}
                 >
                   {navItem.items.map((item) => (
                     <li key={item.to}>
                       <Link
                         to={item.to}
-                        className="block py-3 px-4 text-white no-underline rounded hover:bg-primary transition-colors text-sm"
+                        className="block py-3 px-4 text-gray-200 no-underline rounded hover:bg-dark-accent hover:text-primary transition-colors text-sm"
                       >
                         {item.label}
                       </Link>
@@ -183,15 +181,15 @@ function Navigation() {
 
           {/* Mobile Menu Panel */}
           <div
-            className="mobile-menu fixed top-14 sm:top-16 left-0 right-0 bottom-0 bg-gray-900 overflow-y-auto z-50 lg:hidden"
+            className="mobile-menu fixed top-14 sm:top-16 left-0 right-0 bottom-0 bg-dark-bg overflow-y-auto z-50 lg:hidden"
           >
         <ul className="flex flex-col list-none m-0 p-0">
           {navItems.map((navItem) => (
-            <li key={navItem.id} className="border-b border-gray-800">
+            <li key={navItem.id} className="border-b border-gray-700">
               {/* Dropdown Header - min 44px touch target */}
               <button
                 onClick={() => toggleMobileDropdown(navItem.id)}
-                className="w-full flex items-center justify-between px-6 py-4 text-white hover:bg-gray-800 transition-colors text-left min-h-[44px]"
+                className="w-full flex items-center justify-between px-6 py-4 text-gray-200 hover:bg-dark-accent hover:text-primary transition-colors text-left min-h-[44px]"
               >
                 <span className="text-base sm:text-lg font-medium">{navItem.label}</span>
                 <svg
@@ -213,7 +211,7 @@ function Navigation() {
 
               {/* Dropdown Items */}
               <ul
-                className={`bg-gray-800 overflow-hidden transition-all duration-300 ease-in-out ${
+                className={`bg-dark-surface overflow-hidden transition-all duration-300 ease-in-out ${
                   mobileDropdownOpen === navItem.id ? 'max-h-screen' : 'max-h-0'
                 }`}
               >
@@ -222,7 +220,7 @@ function Navigation() {
                     <Link
                       to={item.to}
                       onClick={closeMobileMenu}
-                      className="block py-4 px-8 text-white no-underline hover:bg-gray-700 transition-colors min-h-[44px] flex items-center"
+                      className="block py-4 px-8 text-gray-200 no-underline hover:bg-dark-accent hover:text-primary transition-colors min-h-[44px] flex items-center"
                     >
                       <span className="text-sm sm:text-base">{item.label}</span>
                     </Link>
