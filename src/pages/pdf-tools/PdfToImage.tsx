@@ -1,18 +1,23 @@
-import { useState } from 'react'
+import { useState, ChangeEvent } from 'react'
 import * as pdfjsLib from 'pdfjs-dist'
 import AdBanner from '../../components/AdBanner'
 
 // 設定 PDF.js worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`
 
+interface ImageData {
+  pageNum: number
+  url: string
+}
+
 function PdfToImage() {
-  const [file, setFile] = useState(null)
-  const [images, setImages] = useState([])
+  const [file, setFile] = useState<File | null>(null)
+  const [images, setImages] = useState<ImageData[]>([])
   const [status, setStatus] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0]
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0]
     if (selectedFile && selectedFile.type === 'application/pdf') {
       setFile(selectedFile)
       setImages([])
@@ -36,7 +41,7 @@ function PdfToImage() {
       const arrayBuffer = await file.arrayBuffer()
       const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise
       const numPages = pdf.numPages
-      const imageUrls = []
+      const imageUrls: ImageData[] = []
 
       for (let pageNum = 1; pageNum <= numPages; pageNum++) {
         const page = await pdf.getPage(pageNum)
@@ -45,13 +50,15 @@ function PdfToImage() {
 
         const canvas = document.createElement('canvas')
         const context = canvas.getContext('2d')
+        if (!context) continue
+
         canvas.height = viewport.height
         canvas.width = viewport.width
 
         await page.render({
           canvasContext: context,
           viewport: viewport,
-        }).promise
+        } as any).promise
 
         const imageUrl = canvas.toDataURL('image/png')
         imageUrls.push({ pageNum, url: imageUrl })
@@ -62,14 +69,15 @@ function PdfToImage() {
       setImages(imageUrls)
       setStatus(`成功轉換 ${numPages} 頁`)
     } catch (error) {
-      setStatus('轉換失敗：' + error.message)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+      setStatus('轉換失敗：' + errorMessage)
       console.error(error)
     } finally {
       setLoading(false)
     }
   }
 
-  const downloadImage = (imageUrl, pageNum) => {
+  const downloadImage = (imageUrl: string, pageNum: number) => {
     const link = document.createElement('a')
     link.href = imageUrl
     link.download = `page-${pageNum}.png`

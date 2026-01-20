@@ -1,15 +1,15 @@
-import { useState } from 'react'
+import { useState, ChangeEvent } from 'react'
 import { PDFDocument } from 'pdf-lib'
 import AdBanner from '../../components/AdBanner'
 
 function MergePdf() {
-  const [files, setFiles] = useState([])
+  const [files, setFiles] = useState<File[]>([])
   const [status, setStatus] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const handleFileChange = (e) => {
-    const selectedFiles = Array.from(e.target.files)
-    const pdfFiles = selectedFiles.filter(file => file.type === 'application/pdf')
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = Array.from(e.target.files || [])
+    const pdfFiles = selectedFiles.filter((file: File) => file.type === 'application/pdf')
 
     if (pdfFiles.length !== selectedFiles.length) {
       setStatus('部分文件不是 PDF 格式，已自動過濾')
@@ -41,7 +41,7 @@ function MergePdf() {
       }
 
       const mergedPdfBytes = await mergedPdf.save()
-      const blob = new Blob([mergedPdfBytes], { type: 'application/pdf' })
+      const blob = new Blob([mergedPdfBytes as BlobPart], { type: 'application/pdf' })
       const url = URL.createObjectURL(blob)
 
       const link = document.createElement('a')
@@ -52,14 +52,15 @@ function MergePdf() {
       URL.revokeObjectURL(url)
       setStatus('合併完成！檔案已下載')
     } catch (error) {
-      setStatus('合併失敗：' + error.message)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+      setStatus('合併失敗：' + errorMessage)
       console.error(error)
     } finally {
       setLoading(false)
     }
   }
 
-  const removeFile = (index) => {
+  const removeFile = (index: number) => {
     setFiles(files.filter((_, i) => i !== index))
   }
 

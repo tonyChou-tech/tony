@@ -13,7 +13,8 @@ function JsonFormatter() {
       setOutput(formatted)
       setStatus('格式化成功')
     } catch (error) {
-      setStatus('錯誤：' + error.message)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+      setStatus('錯誤：' + errorMessage)
       setOutput('')
     }
   }
@@ -25,7 +26,8 @@ function JsonFormatter() {
       setOutput(minified)
       setStatus('壓縮成功')
     } catch (error) {
-      setStatus('錯誤：' + error.message)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+      setStatus('錯誤：' + errorMessage)
       setOutput('')
     }
   }

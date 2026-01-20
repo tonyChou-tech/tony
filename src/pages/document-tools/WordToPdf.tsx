@@ -1,12 +1,12 @@
-import { useState } from 'react'
+import { useState, ChangeEvent } from 'react'
 import AdBanner from '../../components/AdBanner'
 
 function WordToPdf() {
-  const [file, setFile] = useState(null)
+  const [file, setFile] = useState<File | null>(null)
   const [status, setStatus] = useState('')
 
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0]
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0]
     if (selectedFile && (
       selectedFile.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
       selectedFile.type === 'application/msword'

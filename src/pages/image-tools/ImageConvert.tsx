@@ -1,21 +1,22 @@
-import { useState } from 'react'
+import { useState, ChangeEvent } from 'react'
 import AdBanner from '../../components/AdBanner'
+import type { OutputFormat } from '../../types'
 
 function ImageConvert() {
-  const [file, setFile] = useState(null)
-  const [preview, setPreview] = useState(null)
-  const [status, setStatus] = useState('')
-  const [outputFormat, setOutputFormat] = useState('png')
+  const [file, setFile] = useState<File | null>(null)
+  const [preview, setPreview] = useState<string | null>(null)
+  const [status, setStatus] = useState<string>('')
+  const [outputFormat, setOutputFormat] = useState<OutputFormat>('png')
 
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0]
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0]
     if (selectedFile && selectedFile.type.startsWith('image/')) {
       setFile(selectedFile)
       setStatus('')
 
       const reader = new FileReader()
       reader.onloadend = () => {
-        setPreview(reader.result)
+        setPreview(reader.result as string)
       }
       reader.readAsDataURL(selectedFile)
     } else {
@@ -24,7 +25,7 @@ function ImageConvert() {
   }
 
   const handleConvert = async () => {
-    if (!file) {
+    if (!file || !preview) {
       setStatus('請先選擇圖片')
       return
     }
@@ -41,10 +42,20 @@ function ImageConvert() {
         canvas.height = img.height
 
         const ctx = canvas.getContext('2d')
+        if (!ctx) {
+          setStatus('無法獲取 canvas context')
+          return
+        }
+
         ctx.drawImage(img, 0, 0)
 
         canvas.toBlob(
           (blob) => {
+            if (!blob) {
+              setStatus('轉換失敗')
+              return
+            }
+
             const url = URL.createObjectURL(blob)
             const link = document.createElement('a')
             link.href = url
@@ -58,7 +69,8 @@ function ImageConvert() {
         )
       }
     } catch (error) {
-      setStatus('轉換失敗：' + error.message)
+      const errorMessage = error instanceof Error ? error.message : '未知錯誤'
+      setStatus('轉換失敗：' + errorMessage)
       console.error(error)
     }
   }
@@ -89,7 +101,7 @@ function ImageConvert() {
               輸出格式:
               <select
                 value={outputFormat}
-                onChange={(e) => setOutputFormat(e.target.value)}
+                onChange={(e) => setOutputFormat(e.target.value as OutputFormat)}
                 style={{ marginLeft: '1rem', padding: '0.5rem' }}
               >
                 <option value="png">PNG</option>

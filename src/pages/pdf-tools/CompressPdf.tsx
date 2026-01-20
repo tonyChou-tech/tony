@@ -1,16 +1,16 @@
-import { useState } from 'react'
+import { useState, ChangeEvent } from 'react'
 import { PDFDocument } from 'pdf-lib'
 import AdBanner from '../../components/AdBanner'
 
 function CompressPdf() {
-  const [file, setFile] = useState(null)
+  const [file, setFile] = useState<File | null>(null)
   const [status, setStatus] = useState('')
   const [loading, setLoading] = useState(false)
   const [originalSize, setOriginalSize] = useState(0)
   const [compressedSize, setCompressedSize] = useState(0)
 
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0]
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0]
     if (selectedFile && selectedFile.type === 'application/pdf') {
       setFile(selectedFile)
       setOriginalSize(selectedFile.size)
@@ -41,7 +41,7 @@ function CompressPdf() {
         addDefaultPage: false,
       })
 
-      const compressedBlob = new Blob([compressedPdfBytes], { type: 'application/pdf' })
+      const compressedBlob = new Blob([compressedPdfBytes as BlobPart], { type: 'application/pdf' })
       const url = URL.createObjectURL(compressedBlob)
 
       setCompressedSize(compressedBlob.size)
@@ -56,14 +56,15 @@ function CompressPdf() {
       const reduction = ((1 - compressedBlob.size / originalSize) * 100).toFixed(2)
       setStatus(`壓縮完成！檔案已下載。減少了 ${reduction}%`)
     } catch (error) {
-      setStatus('壓縮失敗：' + error.message)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+      setStatus('壓縮失敗：' + errorMessage)
       console.error(error)
     } finally {
       setLoading(false)
     }
   }
 
-  const formatFileSize = (bytes) => {
+  const formatFileSize = (bytes: number) => {
     return (bytes / 1024 / 1024).toFixed(2) + ' MB'
   }
 

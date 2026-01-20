@@ -1,12 +1,12 @@
-import { useState } from 'react'
+import { useState, ChangeEvent } from 'react'
 import AdBanner from '../../components/AdBanner'
 
 function PdfToWord() {
-  const [file, setFile] = useState(null)
+  const [file, setFile] = useState<File | null>(null)
   const [status, setStatus] = useState('')
 
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0]
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0]
     if (selectedFile && selectedFile.type === 'application/pdf') {
       setFile(selectedFile)
       setStatus('')
@@ -31,7 +31,8 @@ function PdfToWord() {
       // 或者可以提取文字內容並創建簡單的文檔
       // 這裡僅作示範
     } catch (error) {
-      setStatus('轉換失敗：' + error.message)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+      setStatus('轉換失敗：' + errorMessage)
     }
   }
 

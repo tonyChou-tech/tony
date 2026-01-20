@@ -1,12 +1,12 @@
-import { useState } from 'react'
+import { useState, ChangeEvent } from 'react'
 import AdBanner from '../../components/AdBanner'
 
 function ExcelToCsv() {
-  const [file, setFile] = useState(null)
+  const [file, setFile] = useState<File | null>(null)
   const [status, setStatus] = useState('')
 
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0]
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0]
     if (selectedFile && (
       selectedFile.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
       selectedFile.type === 'application/vnd.ms-excel' ||
@@ -29,7 +29,8 @@ function ExcelToCsv() {
     if (file.name.endsWith('.csv')) {
       const reader = new FileReader()
       reader.onload = (e) => {
-        const text = e.target.result
+        const text = e.target?.result
+        if (!text || typeof text !== 'string') return
         const blob = new Blob([text], { type: 'text/csv' })
         const url = URL.createObjectURL(blob)
         const link = document.createElement('a')

@@ -1,23 +1,25 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, ChangeEvent } from 'react'
 import AdBanner from '../../components/AdBanner'
 
 function ImageCrop() {
-  const [file, setFile] = useState(null)
-  const [preview, setPreview] = useState(null)
+  const [file, setFile] = useState<File | null>(null)
+  const [preview, setPreview] = useState<string | null>(null)
   const [status, setStatus] = useState('')
   const [width, setWidth] = useState(800)
   const [height, setHeight] = useState(600)
-  const canvasRef = useRef(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
 
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0]
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0]
     if (selectedFile && selectedFile.type.startsWith('image/')) {
       setFile(selectedFile)
       setStatus('')
 
       const reader = new FileReader()
       reader.onloadend = () => {
-        setPreview(reader.result)
+        if (typeof reader.result === 'string') {
+          setPreview(reader.result)
+        }
       }
       reader.readAsDataURL(selectedFile)
     } else {
@@ -39,10 +41,13 @@ function ImageCrop() {
 
       img.onload = () => {
         const canvas = canvasRef.current
+        if (!canvas) return
+
         canvas.width = width
         canvas.height = height
 
         const ctx = canvas.getContext('2d')
+        if (!ctx) return
 
         // 計算縮放比例以填滿畫布
         const scale = Math.max(width / img.width, height / img.height)
@@ -57,6 +62,7 @@ function ImageCrop() {
 
         canvas.toBlob(
           (blob) => {
+            if (!blob) return
             const url = URL.createObjectURL(blob)
             const link = document.createElement('a')
             link.href = url
@@ -70,7 +76,8 @@ function ImageCrop() {
         )
       }
     } catch (error) {
-      setStatus('處理失敗：' + error.message)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+      setStatus('處理失敗：' + errorMessage)
       console.error(error)
     }
   }

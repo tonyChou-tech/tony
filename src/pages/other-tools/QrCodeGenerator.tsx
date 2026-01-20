@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import QRCode from 'qrcode'
 import AdBanner from '../../components/AdBanner'
 
@@ -6,7 +6,7 @@ function QrCodeGenerator() {
   const [text, setText] = useState('')
   const [qrCodeUrl, setQrCodeUrl] = useState('')
   const [status, setStatus] = useState('')
-  const canvasRef = useRef(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
 
   const handleGenerate = async () => {
     if (!text) {
@@ -16,6 +16,8 @@ function QrCodeGenerator() {
 
     try {
       const canvas = canvasRef.current
+      if (!canvas) return
+
       await QRCode.toCanvas(canvas, text, {
         width: 300,
         margin: 2,
@@ -29,7 +31,8 @@ function QrCodeGenerator() {
       setQrCodeUrl(url)
       setStatus('QR Code 已生成')
     } catch (error) {
-      setStatus('生成失敗：' + error.message)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+      setStatus('生成失敗：' + errorMessage)
       console.error(error)
     }
   }

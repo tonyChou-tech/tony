@@ -18,7 +18,10 @@
       "Bash(git push:*)",
       "Bash(gh run list:*)",
       "Bash(gh run view:*)",
-      "Bash(gh repo view:*)"
+      "Bash(gh repo view:*)",
+      "Bash(gh repo list:*)",
+      "Bash(gh repo create:*)",
+      "Bash(npm run type-check:*)"
     ],
     "deny": [],
     "ask": []

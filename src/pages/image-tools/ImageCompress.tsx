@@ -1,19 +1,19 @@
-import { useState } from 'react'
+import { useState, ChangeEvent } from 'react'
 import imageCompression from 'browser-image-compression'
 import AdBanner from '../../components/AdBanner'
 
 function ImageCompress() {
-  const [file, setFile] = useState(null)
-  const [originalPreview, setOriginalPreview] = useState(null)
-  const [compressedPreview, setCompressedPreview] = useState(null)
+  const [file, setFile] = useState<File | null>(null)
+  const [originalPreview, setOriginalPreview] = useState<string | null>(null)
+  const [compressedPreview, setCompressedPreview] = useState<string | null>(null)
   const [status, setStatus] = useState('')
   const [loading, setLoading] = useState(false)
   const [quality, setQuality] = useState(0.8)
   const [originalSize, setOriginalSize] = useState(0)
   const [compressedSize, setCompressedSize] = useState(0)
 
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0]
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0]
     if (selectedFile && selectedFile.type.startsWith('image/')) {
       setFile(selectedFile)
       setOriginalSize(selectedFile.size)
@@ -22,7 +22,9 @@ function ImageCompress() {
 
       const reader = new FileReader()
       reader.onloadend = () => {
-        setOriginalPreview(reader.result)
+        if (typeof reader.result === 'string') {
+          setOriginalPreview(reader.result)
+        }
       }
       reader.readAsDataURL(selectedFile)
     } else {
@@ -52,7 +54,9 @@ function ImageCompress() {
 
       const reader = new FileReader()
       reader.onloadend = () => {
-        setCompressedPreview(reader.result)
+        if (typeof reader.result === 'string') {
+          setCompressedPreview(reader.result)
+        }
         const reduction = ((1 - compressedFile.size / originalSize) * 100).toFixed(2)
         setStatus(`壓縮完成！減少了 ${reduction}%`)
       }
@@ -66,14 +70,15 @@ function ImageCompress() {
       link.click()
       URL.revokeObjectURL(url)
     } catch (error) {
-      setStatus('壓縮失敗：' + error.message)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+      setStatus('壓縮失敗：' + errorMessage)
       console.error(error)
     } finally {
       setLoading(false)
     }
   }
 
-  const formatFileSize = (bytes) => {
+  const formatFileSize = (bytes: number) => {
     return (bytes / 1024).toFixed(2) + ' KB'
   }
 

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, ChangeEvent } from 'react'
 import AdBanner from '../../components/AdBanner'
 
 function Base64Tool() {
@@ -13,7 +13,8 @@ function Base64Tool() {
       setOutput(encoded)
       setStatus('編碼成功')
     } catch (error) {
-      setStatus('編碼失敗：' + error.message)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+      setStatus('編碼失敗：' + errorMessage)
       setOutput('')
     }
   }
@@ -24,7 +25,8 @@ function Base64Tool() {
       setOutput(decoded)
       setStatus('解碼成功')
     } catch (error) {
-      setStatus('解碼失敗：' + error.message)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+      setStatus('解碼失敗：' + errorMessage)
       setOutput('')
     }
   }
@@ -40,15 +42,17 @@ function Base64Tool() {
     setStatus('')
   }
 
-  const handleFileEncode = (e) => {
-    const file = e.target.files[0]
+  const handleFileEncode = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
     if (!file) return
 
     const reader = new FileReader()
     reader.onload = (event) => {
-      const base64 = event.target.result
-      setOutput(base64)
-      setStatus(`文件已編碼 (${file.name})`)
+      const base64 = event.target?.result
+      if (typeof base64 === 'string') {
+        setOutput(base64)
+        setStatus(`文件已編碼 (${file.name})`)
+      }
     }
     reader.readAsDataURL(file)
   }
