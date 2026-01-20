@@ -42,7 +42,7 @@ function AdBanner({
       <ins
         className="adsbygoogle"
         style={{ display: "block" }}
-        data-ad-client="ca-pub-8356436630244164" // 替換成你的 AdSense ID
+        data-ad-client={import.meta.env.VITE_ADSENSE_CLIENT_ID}
         data-ad-slot={slot}
         data-ad-format={format}
         data-full-width-responsive={responsive}
