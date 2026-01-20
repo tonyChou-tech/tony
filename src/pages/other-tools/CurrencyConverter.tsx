@@ -5,13 +5,6 @@ interface CurrencyRates {
   [key: string]: number;
 }
 
-interface CurrencyData {
-  amount: number;
-  base: string;
-  date: string;
-  rates: CurrencyRates;
-}
-
 // 常用貨幣資訊（按使用頻率排序）
 const currencyInfo: { [key: string]: { name: string; flag: string } } = {
   TWD: { name: "新台幣", flag: "🇹🇼" },
@@ -168,9 +161,7 @@ function CurrencyConverter() {
               padding: "0.75rem",
               fontSize: "1.25rem",
               borderRadius: "8px",
-              border: "2px solid #e2e8f0",
-              color: "#000",
-              backgroundColor: "#fff"
+              border: "2px solid #e2e8f0"
             }}
           />
         </div>
@@ -208,9 +199,7 @@ function CurrencyConverter() {
                 padding: "0.75rem",
                 fontSize: "1rem",
                 borderRadius: "8px",
-                border: "2px solid #e2e8f0",
-                color: "#000",
-                backgroundColor: "#fff"
+                border: "2px solid #e2e8f0"
               }}
             >
               {Object.entries(currencyInfo).map(([code, info]) => (
@@ -269,9 +258,7 @@ function CurrencyConverter() {
                 padding: "0.75rem",
                 fontSize: "1rem",
                 borderRadius: "8px",
-                border: "2px solid #e2e8f0",
-                color: "#000",
-                backgroundColor: "#fff"
+                border: "2px solid #e2e8f0"
               }}
             >
               {Object.entries(currencyInfo).map(([code, info]) => (
