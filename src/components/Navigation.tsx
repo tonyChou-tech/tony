@@ -134,25 +134,25 @@ function Navigation() {
             </li>
           </ul>
 
-          {/* Mobile Hamburger Button */}
+          {/* Mobile Hamburger Button - More Visible */}
           <button
-            className="hamburger-button lg:hidden p-2 text-white hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded"
+            className="hamburger-button lg:hidden flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 bg-dark-surface border border-gray-700 rounded-lg text-primary hover:bg-primary hover:text-dark-bg transition-all focus:outline-none focus:ring-2 focus:ring-primary shadow-lg"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
             aria-expanded={mobileMenuOpen}
           >
             <svg
-              className="w-6 h-6 sm:w-7 sm:h-7"
+              className="w-6 h-6"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
+              strokeWidth={2.5}
             >
               {mobileMenuOpen ? (
                 // X icon when menu is open
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth={2}
                   d="M6 18L18 6M6 6l12 12"
                 />
               ) : (
@@ -160,7 +160,6 @@ function Navigation() {
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth={2}
                   d="M4 6h16M4 12h16M4 18h16"
                 />
               )}
