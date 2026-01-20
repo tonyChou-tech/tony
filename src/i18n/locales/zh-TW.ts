@@ -137,7 +137,7 @@ export default {
     },
     currencyConverter: {
       title: '匯率轉換',
-      description: '即時匯率轉換工具，支援 31 種主要貨幣',
+      description: '即時匯率轉換工具，支援新台幣及 30+ 種主要貨幣',
     },
   },
   footer: {

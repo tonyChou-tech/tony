@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import LanguageSwitcher from './LanguageSwitcher'
 
@@ -9,37 +9,8 @@ function Navigation() {
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState<string | null>(null)
   const { t } = useTranslation()
 
-  // Close mobile menu when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as HTMLElement
-      if (mobileMenuOpen && !target.closest('.mobile-menu') && !target.closest('.hamburger-button')) {
-        setMobileMenuOpen(false)
-        setMobileDropdownOpen(null)
-      }
-    }
-
-    if (mobileMenuOpen) {
-      document.addEventListener('mousedown', handleClickOutside)
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [mobileMenuOpen])
-
-  // Prevent body scroll when mobile menu is open
-  useEffect(() => {
-    if (mobileMenuOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = 'unset'
-    }
-
-    return () => {
-      document.body.style.overflow = 'unset'
-    }
-  }, [mobileMenuOpen])
+  // No need for click outside handler for inline menu
+  // No need to prevent body scroll for inline menu
 
   const toggleMobileDropdown = (menu: string) => {
     setMobileDropdownOpen(mobileDropdownOpen === menu ? null : menu)
@@ -137,7 +108,7 @@ function Navigation() {
 
           {/* Mobile Hamburger Button - More Visible */}
           <button
-            className="hamburger-button lg:hidden flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 bg-dark-surface border border-gray-700 rounded-lg text-primary hover:bg-primary hover:text-dark-bg transition-all focus:outline-none focus:ring-2 focus:ring-primary shadow-lg"
+            className="hamburger-button lg:hidden flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 bg-dark-surface border border-primary/50 rounded-lg hover:bg-primary/10 hover:border-primary transition-all focus:outline-none focus:ring-2 focus:ring-primary shadow-lg"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
             aria-expanded={mobileMenuOpen}
@@ -145,15 +116,15 @@ function Navigation() {
             <svg
               className="w-6 h-6"
               fill="none"
-              stroke="currentColor"
               viewBox="0 0 24 24"
-              strokeWidth={2.5}
             >
               {mobileMenuOpen ? (
                 // X icon when menu is open
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
+                  strokeWidth={2.5}
+                  stroke="#c4ff0e"
                   d="M6 18L18 6M6 6l12 12"
                 />
               ) : (
@@ -161,6 +132,8 @@ function Navigation() {
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
+                  strokeWidth={2.5}
+                  stroke="#c4ff0e"
                   d="M4 6h16M4 12h16M4 18h16"
                 />
               )}
@@ -171,7 +144,7 @@ function Navigation() {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-dark-bg border-t border-gray-800">
+        <div className="mobile-menu lg:hidden bg-dark-bg border-t border-gray-800">
         <ul className="flex flex-col list-none m-0 p-0">
           {navItems.map((navItem) => (
             <li key={navItem.id} className="border-b border-gray-700">

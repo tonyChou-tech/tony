@@ -137,7 +137,7 @@ export default {
     },
     currencyConverter: {
       title: 'Currency Converter',
-      description: 'Real-time currency conversion tool supporting 31 major currencies',
+      description: 'Real-time currency conversion supporting TWD and 30+ major currencies',
     },
   },
   footer: {
