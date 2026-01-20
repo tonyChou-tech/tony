@@ -135,6 +135,10 @@ export default {
       downloadQR: 'Download QR Code',
       success: 'QR Code generated',
     },
+    currencyConverter: {
+      title: 'Currency Converter',
+      description: 'Real-time currency conversion tool supporting 31 major currencies',
+    },
   },
   footer: {
     copyright: '© 2024 Online Tools - All tools run locally in your browser to ensure your privacy',

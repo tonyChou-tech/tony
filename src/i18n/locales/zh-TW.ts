@@ -135,6 +135,10 @@ export default {
       downloadQR: '下載 QR Code',
       success: 'QR Code 已生成',
     },
+    currencyConverter: {
+      title: '匯率轉換',
+      description: '即時匯率轉換工具，支援 31 種主要貨幣',
+    },
   },
   footer: {
     copyright: '© 2024 線上工具集 - 所有工具皆在瀏覽器本地運行，確保您的隱私安全',

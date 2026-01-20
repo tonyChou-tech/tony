@@ -80,6 +80,7 @@ function Navigation() {
       id: 'other',
       label: t('navigation.otherTools'),
       items: [
+        { to: '/other-tools/currency-converter', label: t('otherTools.currencyConverter.title') },
         { to: '/other-tools/json-formatter', label: t('otherTools.jsonFormatter.title') },
         { to: '/other-tools/base64', label: t('otherTools.base64.title') },
         { to: '/other-tools/qr-code', label: t('otherTools.qrCode.title') },

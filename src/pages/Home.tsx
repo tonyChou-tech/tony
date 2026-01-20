@@ -55,6 +55,12 @@ function Home() {
     ],
     other: [
       {
+        name: t("otherTools.currencyConverter.title"),
+        path: "/other-tools/currency-converter",
+        desc: t("otherTools.currencyConverter.description"),
+        icon: "💱"
+      },
+      {
         name: t("otherTools.jsonFormatter.title"),
         path: "/other-tools/json-formatter",
         desc: t("otherTools.jsonFormatter.description"),
