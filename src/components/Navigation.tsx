@@ -66,10 +66,17 @@ function Navigation() {
           {/* Logo */}
           <Link
             to="/"
-            className="text-lg sm:text-xl lg:text-2xl font-black text-primary hover:text-primary-hover transition-colors flex-shrink-0"
+            className="flex items-center gap-2 sm:gap-3 flex-shrink-0 hover:opacity-80 transition-opacity"
             onClick={closeMobileMenu}
           >
-            {t('home.title')}
+            <img
+              src={`${import.meta.env.BASE_URL}logo.png`}
+              alt="Logo"
+              className="h-8 sm:h-10 w-auto rounded-lg"
+            />
+            <span className="text-base sm:text-lg lg:text-xl font-black text-white">
+              {t('home.title')}
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -108,7 +115,7 @@ function Navigation() {
 
           {/* Mobile Hamburger Button - More Visible */}
           <button
-            className="hamburger-button lg:hidden flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 bg-dark-surface border border-primary/50 rounded-lg hover:bg-primary/10 hover:border-primary transition-all focus:outline-none focus:ring-2 focus:ring-primary shadow-lg"
+            className="hamburger-button lg:hidden flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 p-0 bg-dark-surface border border-primary/50 rounded-lg hover:bg-primary/10 hover:border-primary transition-all focus:outline-none focus:ring-2 focus:ring-primary shadow-lg"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
             aria-expanded={mobileMenuOpen}
