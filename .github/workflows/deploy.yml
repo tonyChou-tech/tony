@@ -33,6 +33,11 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: List dist contents
+        run: |
+          ls -la dist/
+          cat dist/index.html
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
