@@ -5,26 +5,34 @@ import LanguageSwitcher from './LanguageSwitcher'
 
 function Navigation() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { t } = useTranslation()
+
+  const toggleDropdown = (menu: string) => {
+    setOpenDropdown(openDropdown === menu ? null : menu)
+  }
 
   return (
     <nav className="bg-gray-900 shadow-lg sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-8 py-4 flex justify-between items-center">
-        <Link to="/" className="text-2xl font-bold text-primary hover:text-primary-hover transition-colors">
-          {t('home.title')}
-        </Link>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          {/* Logo */}
+          <Link to="/" className="text-xl sm:text-2xl font-bold text-primary hover:text-primary-hover transition-colors flex-shrink-0">
+            {t('home.title')}
+          </Link>
 
-        <ul className="flex gap-8 list-none m-0 p-0">
-          <li
-            className="relative group"
-            onMouseEnter={() => setOpenDropdown('pdf')}
-            onMouseLeave={() => setOpenDropdown(null)}
-          >
-            <span className="text-white cursor-pointer py-2 block hover:text-primary transition-colors">
-              {t('navigation.pdfTools')}
-            </span>
-            <ul className={`absolute top-full left-0 bg-gray-800 min-w-[200px] list-none p-2 rounded shadow-xl
-              ${openDropdown === 'pdf' ? 'block' : 'hidden'} group-hover:block`}>
+          {/* Desktop Navigation */}
+          <ul className="hidden lg:flex gap-6 xl:gap-8 list-none m-0 p-0 items-center">
+            <li
+              className="relative group"
+              onMouseEnter={() => setOpenDropdown('pdf')}
+              onMouseLeave={() => setOpenDropdown(null)}
+            >
+              <span className="text-white cursor-pointer py-2 block hover:text-primary transition-colors text-sm xl:text-base">
+                {t('navigation.pdfTools')}
+              </span>
+              <ul className={`absolute top-full left-0 bg-gray-800 min-w-[200px] list-none p-2 rounded shadow-xl
+                ${openDropdown === 'pdf' ? 'block' : 'hidden'} group-hover:block`}>
               <li>
                 <Link
                   to="/pdf-tools/pdf-to-word"
@@ -166,6 +174,7 @@ function Navigation() {
             <LanguageSwitcher />
           </li>
         </ul>
+        </div>
       </div>
     </nav>
   )
