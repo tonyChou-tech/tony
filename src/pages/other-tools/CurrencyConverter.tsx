@@ -168,7 +168,9 @@ function CurrencyConverter() {
               padding: "0.75rem",
               fontSize: "1.25rem",
               borderRadius: "8px",
-              border: "2px solid #e2e8f0"
+              border: "2px solid #e2e8f0",
+              color: "#000",
+              backgroundColor: "#fff"
             }}
           />
         </div>
@@ -206,7 +208,9 @@ function CurrencyConverter() {
                 padding: "0.75rem",
                 fontSize: "1rem",
                 borderRadius: "8px",
-                border: "2px solid #e2e8f0"
+                border: "2px solid #e2e8f0",
+                color: "#000",
+                backgroundColor: "#fff"
               }}
             >
               {Object.entries(currencyInfo).map(([code, info]) => (
@@ -265,7 +269,9 @@ function CurrencyConverter() {
                 padding: "0.75rem",
                 fontSize: "1rem",
                 borderRadius: "8px",
-                border: "2px solid #e2e8f0"
+                border: "2px solid #e2e8f0",
+                color: "#000",
+                backgroundColor: "#fff"
               }}
             >
               {Object.entries(currencyInfo).map(([code, info]) => (
