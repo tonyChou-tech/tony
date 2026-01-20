@@ -1,7 +1,9 @@
 import { useState, ChangeEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import AdBanner from '../../components/AdBanner'
 
 function PdfToWord() {
+  const { t } = useTranslation()
   const [file, setFile] = useState<File | null>(null)
   const [status, setStatus] = useState('')
 
@@ -11,17 +13,17 @@ function PdfToWord() {
       setFile(selectedFile)
       setStatus('')
     } else {
-      setStatus('請選擇有效的 PDF 文件')
+      setStatus(t('errors.invalidFile'))
     }
   }
 
   const handleConvert = async () => {
     if (!file) {
-      setStatus('請先選擇 PDF 文件')
+      setStatus(t('errors.fileRequired'))
       return
     }
 
-    setStatus('轉換中...')
+    setStatus(t('common.processing'))
 
     try {
       // 注意：真正的 PDF 轉 Word 需要後端服務或付費 API
@@ -31,15 +33,15 @@ function PdfToWord() {
       // 或者可以提取文字內容並創建簡單的文檔
       // 這裡僅作示範
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-      setStatus('轉換失敗：' + errorMessage)
+      const errorMessage = error instanceof Error ? error.message : t('errors.unknownError')
+      setStatus(t('errors.processingFailed', { message: errorMessage }))
     }
   }
 
   return (
     <div className="tool-page">
-      <h1>PDF 轉 Word</h1>
-      <p>將 PDF 文件轉換為可編輯的 Word 文檔</p>
+      <h1>{t('pdfTools.pdfToWord.title')}</h1>
+      <p>{t('pdfTools.pdfToWord.description')}</p>
 
       <AdBanner />
 
@@ -52,7 +54,7 @@ function PdfToWord() {
             onChange={handleFileChange}
           />
           <label htmlFor="pdf-file" className="file-input-label">
-            選擇 PDF 文件
+            {t('pdfTools.pdfToWord.title')}
           </label>
         </div>
 
@@ -64,7 +66,7 @@ function PdfToWord() {
         )}
 
         <button onClick={handleConvert} disabled={!file}>
-          轉換為 Word
+          {t('pdfTools.pdfToWord.title')}
         </button>
 
         {status && (

@@ -1,8 +1,10 @@
 import { useState, ChangeEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import { PDFDocument } from 'pdf-lib'
 import AdBanner from '../../components/AdBanner'
 
 function MergePdf() {
+  const { t } = useTranslation()
   const [files, setFiles] = useState<File[]>([])
   const [status, setStatus] = useState('')
   const [loading, setLoading] = useState(false)
@@ -27,7 +29,7 @@ function MergePdf() {
     }
 
     setLoading(true)
-    setStatus('合併中...')
+    setStatus(t('pdfTools.mergePdf.merging', { current: 0, total: files.length }))
 
     try {
       const mergedPdf = await PDFDocument.create()
@@ -37,7 +39,7 @@ function MergePdf() {
         const pdf = await PDFDocument.load(fileData)
         const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices())
         copiedPages.forEach((page) => mergedPdf.addPage(page))
-        setStatus(`合併中... ${i + 1}/${files.length}`)
+        setStatus(t('pdfTools.mergePdf.merging', { current: i + 1, total: files.length }))
       }
 
       const mergedPdfBytes = await mergedPdf.save()
@@ -50,10 +52,10 @@ function MergePdf() {
       link.click()
 
       URL.revokeObjectURL(url)
-      setStatus('合併完成！檔案已下載')
+      setStatus(t('pdfTools.mergePdf.success'))
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-      setStatus('合併失敗：' + errorMessage)
+      const errorMessage = error instanceof Error ? error.message : t('errors.unknownError')
+      setStatus(t('errors.processingFailed', { message: errorMessage }))
       console.error(error)
     } finally {
       setLoading(false)
@@ -66,8 +68,8 @@ function MergePdf() {
 
   return (
     <div className="tool-page">
-      <h1>合併 PDF</h1>
-      <p>將多個 PDF 文件合併為一個文件</p>
+      <h1>{t('pdfTools.mergePdf.title')}</h1>
+      <p>{t('pdfTools.mergePdf.description')}</p>
 
       <AdBanner />
 
@@ -81,13 +83,13 @@ function MergePdf() {
             onChange={handleFileChange}
           />
           <label htmlFor="pdf-files" className="file-input-label">
-            選擇多個 PDF 文件
+            {t('pdfTools.mergePdf.selectFiles')}
           </label>
         </div>
 
         {files.length > 0 && (
           <div className="file-list" style={{ marginTop: '1rem' }}>
-            <h3>已選擇的文件 ({files.length})</h3>
+            <h3>{t('pdfTools.mergePdf.filesSelected', { count: files.length })}</h3>
             {files.map((file, index) => (
               <div key={index} style={{
                 display: 'flex',
@@ -103,7 +105,7 @@ function MergePdf() {
                   onClick={() => removeFile(index)}
                   style={{ padding: '0.25rem 0.5rem', fontSize: '0.8rem' }}
                 >
-                  移除
+                  {t('pdfTools.mergePdf.remove')}
                 </button>
               </div>
             ))}
@@ -115,7 +117,7 @@ function MergePdf() {
           disabled={files.length < 2 || loading}
           style={{ marginTop: '1rem' }}
         >
-          {loading ? '合併中...' : '合併 PDF'}
+          {loading ? t('common.processing') : t('pdfTools.mergePdf.title')}
         </button>
 
         {status && (

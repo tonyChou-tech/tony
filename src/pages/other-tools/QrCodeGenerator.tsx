@@ -1,8 +1,10 @@
 import { useState, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import QRCode from 'qrcode'
 import AdBanner from '../../components/AdBanner'
 
 function QrCodeGenerator() {
+  const { t } = useTranslation()
   const [text, setText] = useState('')
   const [qrCodeUrl, setQrCodeUrl] = useState('')
   const [status, setStatus] = useState('')
@@ -10,7 +12,7 @@ function QrCodeGenerator() {
 
   const handleGenerate = async () => {
     if (!text) {
-      setStatus('請輸入內容')
+      setStatus(t('errors.fileRequired'))
       return
     }
 
@@ -29,10 +31,10 @@ function QrCodeGenerator() {
 
       const url = canvas.toDataURL()
       setQrCodeUrl(url)
-      setStatus('QR Code 已生成')
+      setStatus(t('otherTools.qrCode.success'))
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-      setStatus('生成失敗：' + errorMessage)
+      const errorMessage = error instanceof Error ? error.message : t('errors.unknownError')
+      setStatus(t('errors.processingFailed', { message: errorMessage }))
       console.error(error)
     }
   }
@@ -44,7 +46,7 @@ function QrCodeGenerator() {
     link.href = qrCodeUrl
     link.download = 'qrcode.png'
     link.click()
-    setStatus('QR Code 已下載')
+    setStatus(t('common.success'))
   }
 
   const handleClear = () => {
@@ -62,18 +64,18 @@ function QrCodeGenerator() {
 
   return (
     <div className="tool-page">
-      <h1>QR Code 生成器</h1>
-      <p>生成 QR Code 二維碼</p>
+      <h1>{t('otherTools.qrCode.title')}</h1>
+      <p>{t('otherTools.qrCode.description')}</p>
 
       <AdBanner />
 
       <div className="tool-card">
         <div>
-          <h3>輸入內容</h3>
+          <h3>{t('otherTools.qrCode.inputContent')}</h3>
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="輸入要生成 QR Code 的內容（網址、文字、電話等）"
+            placeholder={t('otherTools.qrCode.placeholder')}
             style={{
               width: '100%',
               minHeight: '100px',
@@ -87,7 +89,7 @@ function QrCodeGenerator() {
         </div>
 
         <div style={{ marginTop: '1rem' }}>
-          <h4>快速範例</h4>
+          <h4>{t('otherTools.qrCode.quickExamples')}</h4>
           <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
             {examples.map((example) => (
               <button
@@ -102,8 +104,8 @@ function QrCodeGenerator() {
         </div>
 
         <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-          <button onClick={handleGenerate}>生成 QR Code</button>
-          <button onClick={handleClear}>清除</button>
+          <button onClick={handleGenerate}>{t('otherTools.qrCode.generate')}</button>
+          <button onClick={handleClear}>{t('common.clear')}</button>
         </div>
 
         {status && (
@@ -116,7 +118,7 @@ function QrCodeGenerator() {
 
         {qrCodeUrl && (
           <div style={{ marginTop: '2rem', textAlign: 'center' }}>
-            <h3>生成的 QR Code</h3>
+            <h3>{t('otherTools.qrCode.generated')}</h3>
             <div style={{
               display: 'inline-block',
               padding: '1rem',
@@ -127,7 +129,7 @@ function QrCodeGenerator() {
               <img src={qrCodeUrl} alt="QR Code" style={{ display: 'block' }} />
             </div>
             <button onClick={handleDownload} style={{ marginTop: '1rem' }}>
-              下載 QR Code
+              {t('otherTools.qrCode.downloadQR')}
             </button>
           </div>
         )}

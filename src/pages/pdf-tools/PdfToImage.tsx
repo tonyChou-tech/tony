@@ -1,4 +1,5 @@
 import { useState, ChangeEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import * as pdfjsLib from 'pdfjs-dist'
 import AdBanner from '../../components/AdBanner'
 
@@ -11,6 +12,7 @@ interface ImageData {
 }
 
 function PdfToImage() {
+  const { t } = useTranslation()
   const [file, setFile] = useState<File | null>(null)
   const [images, setImages] = useState<ImageData[]>([])
   const [status, setStatus] = useState('')
@@ -23,18 +25,18 @@ function PdfToImage() {
       setImages([])
       setStatus('')
     } else {
-      setStatus('請選擇有效的 PDF 文件')
+      setStatus(t('errors.invalidFile'))
     }
   }
 
   const handleConvert = async () => {
     if (!file) {
-      setStatus('請先選擇 PDF 文件')
+      setStatus(t('errors.fileRequired'))
       return
     }
 
     setLoading(true)
-    setStatus('轉換中...')
+    setStatus(t('common.processing'))
     setImages([])
 
     try {
@@ -63,14 +65,14 @@ function PdfToImage() {
         const imageUrl = canvas.toDataURL('image/png')
         imageUrls.push({ pageNum, url: imageUrl })
 
-        setStatus(`轉換中... ${pageNum}/${numPages}`)
+        setStatus(t('pdfTools.pdfToImage.converting', { current: pageNum, total: numPages }))
       }
 
       setImages(imageUrls)
-      setStatus(`成功轉換 ${numPages} 頁`)
+      setStatus(t('pdfTools.pdfToImage.success', { count: numPages }))
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-      setStatus('轉換失敗：' + errorMessage)
+      const errorMessage = error instanceof Error ? error.message : t('errors.unknownError')
+      setStatus(t('errors.processingFailed', { message: errorMessage }))
       console.error(error)
     } finally {
       setLoading(false)
@@ -92,8 +94,8 @@ function PdfToImage() {
 
   return (
     <div className="tool-page">
-      <h1>PDF 轉圖片</h1>
-      <p>將 PDF 的每一頁轉換為 PNG 圖片</p>
+      <h1>{t('pdfTools.pdfToImage.title')}</h1>
+      <p>{t('pdfTools.pdfToImage.description')}</p>
 
       <AdBanner />
 
@@ -106,7 +108,7 @@ function PdfToImage() {
             onChange={handleFileChange}
           />
           <label htmlFor="pdf-file" className="file-input-label">
-            選擇 PDF 文件
+            {t('pdfTools.pdfToImage.selectFile')}
           </label>
         </div>
 
@@ -117,7 +119,7 @@ function PdfToImage() {
         )}
 
         <button onClick={handleConvert} disabled={!file || loading}>
-          {loading ? '轉換中...' : '開始轉換'}
+          {loading ? t('common.processing') : t('common.upload')}
         </button>
 
         {status && (
@@ -129,7 +131,7 @@ function PdfToImage() {
         {images.length > 0 && (
           <>
             <button onClick={downloadAll} style={{ marginTop: '1rem' }}>
-              下載全部圖片
+              {t('pdfTools.pdfToImage.downloadAll')}
             </button>
 
             <div className="image-grid" style={{ marginTop: '2rem' }}>
@@ -144,7 +146,7 @@ function PdfToImage() {
                     onClick={() => downloadImage(img.url, img.pageNum)}
                     style={{ marginTop: '0.5rem' }}
                   >
-                    下載第 {img.pageNum} 頁
+                    {t('pdfTools.pdfToImage.downloadPage', { page: img.pageNum })}
                   </button>
                 </div>
               ))}

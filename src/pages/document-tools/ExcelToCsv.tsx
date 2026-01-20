@@ -1,7 +1,9 @@
 import { useState, ChangeEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import AdBanner from '../../components/AdBanner'
 
 function ExcelToCsv() {
+  const { t } = useTranslation()
   const [file, setFile] = useState<File | null>(null)
   const [status, setStatus] = useState('')
 
@@ -15,13 +17,13 @@ function ExcelToCsv() {
       setFile(selectedFile)
       setStatus('')
     } else {
-      setStatus('請選擇有效的 Excel 文件 (.xls, .xlsx) 或 CSV 文件')
+      setStatus(t('errors.invalidFile'))
     }
   }
 
   const handleConvert = () => {
     if (!file) {
-      setStatus('請先選擇 Excel 文件')
+      setStatus(t('errors.fileRequired'))
       return
     }
 
@@ -49,8 +51,8 @@ function ExcelToCsv() {
 
   return (
     <div className="tool-page">
-      <h1>Excel 轉 CSV</h1>
-      <p>將 Excel 文件轉換為 CSV 格式</p>
+      <h1>{t('documentTools.excelToCsv.title')}</h1>
+      <p>{t('documentTools.excelToCsv.description')}</p>
 
       <AdBanner />
 
@@ -63,7 +65,7 @@ function ExcelToCsv() {
             onChange={handleFileChange}
           />
           <label htmlFor="excel-file" className="file-input-label">
-            選擇 Excel 文件
+            {t('documentTools.excelToCsv.title')}
           </label>
         </div>
 
@@ -75,7 +77,7 @@ function ExcelToCsv() {
         )}
 
         <button onClick={handleConvert} disabled={!file}>
-          轉換為 CSV
+          {t('documentTools.excelToCsv.title')}
         </button>
 
         {status && (

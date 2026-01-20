@@ -1,7 +1,9 @@
 import { useState, ChangeEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import AdBanner from '../../components/AdBanner'
 
 function Base64Tool() {
+  const { t } = useTranslation()
   const [input, setInput] = useState('')
   const [output, setOutput] = useState('')
   const [status, setStatus] = useState('')
@@ -11,10 +13,10 @@ function Base64Tool() {
     try {
       const encoded = btoa(unescape(encodeURIComponent(input)))
       setOutput(encoded)
-      setStatus('編碼成功')
+      setStatus(t('otherTools.base64.success', { action: t('otherTools.base64.encode') }))
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-      setStatus('編碼失敗：' + errorMessage)
+      const errorMessage = error instanceof Error ? error.message : t('errors.unknownError')
+      setStatus(t('errors.processingFailed', { message: errorMessage }))
       setOutput('')
     }
   }
@@ -23,17 +25,17 @@ function Base64Tool() {
     try {
       const decoded = decodeURIComponent(escape(atob(input)))
       setOutput(decoded)
-      setStatus('解碼成功')
+      setStatus(t('otherTools.base64.success', { action: t('otherTools.base64.decode') }))
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-      setStatus('解碼失敗：' + errorMessage)
+      const errorMessage = error instanceof Error ? error.message : t('errors.unknownError')
+      setStatus(t('errors.processingFailed', { message: errorMessage }))
       setOutput('')
     }
   }
 
   const handleCopy = () => {
     navigator.clipboard.writeText(output)
-    setStatus('已複製到剪貼簿')
+    setStatus(t('common.success'))
   }
 
   const handleClear = () => {
@@ -59,8 +61,8 @@ function Base64Tool() {
 
   return (
     <div className="tool-page">
-      <h1>Base64 編碼/解碼工具</h1>
-      <p>Base64 編碼和解碼文字與文件</p>
+      <h1>{t('otherTools.base64.title')}</h1>
+      <p>{t('otherTools.base64.description')}</p>
 
       <AdBanner />
 
@@ -73,7 +75,7 @@ function Base64Tool() {
               checked={mode === 'encode'}
               onChange={(e) => setMode(e.target.value)}
             />
-            {' '}編碼
+            {' '}{t('otherTools.base64.encode')}
           </label>
           <label>
             <input
@@ -82,12 +84,12 @@ function Base64Tool() {
               checked={mode === 'decode'}
               onChange={(e) => setMode(e.target.value)}
             />
-            {' '}解碼
+            {' '}{t('otherTools.base64.decode')}
           </label>
         </div>
 
         <div>
-          <h3>輸入</h3>
+          <h3>{t('otherTools.base64.input')}</h3>
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -108,7 +110,7 @@ function Base64Tool() {
         <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem', flexWrap: 'wrap' }}>
           {mode === 'encode' && (
             <>
-              <button onClick={handleEncode}>編碼文字</button>
+              <button onClick={handleEncode}>{t('otherTools.base64.encodeText')}</button>
               <div className="file-input-wrapper">
                 <input
                   type="file"
@@ -117,15 +119,15 @@ function Base64Tool() {
                   style={{ display: 'none' }}
                 />
                 <label htmlFor="file-encode" className="file-input-label">
-                  編碼文件
+                  {t('otherTools.base64.encodeFile')}
                 </label>
               </div>
             </>
           )}
           {mode === 'decode' && (
-            <button onClick={handleDecode}>解碼</button>
+            <button onClick={handleDecode}>{t('otherTools.base64.decode')}</button>
           )}
-          <button onClick={handleClear}>清除</button>
+          <button onClick={handleClear}>{t('common.clear')}</button>
         </div>
 
         {status && (
@@ -137,8 +139,8 @@ function Base64Tool() {
         {output && (
           <div style={{ marginTop: '2rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h3>輸出</h3>
-              <button onClick={handleCopy}>複製</button>
+              <h3>{t('otherTools.base64.output')}</h3>
+              <button onClick={handleCopy}>{t('common.copy')}</button>
             </div>
             <textarea
               value={output}

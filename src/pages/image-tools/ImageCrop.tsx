@@ -1,7 +1,9 @@
 import { useState, useRef, ChangeEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import AdBanner from '../../components/AdBanner'
 
 function ImageCrop() {
+  const { t } = useTranslation()
   const [file, setFile] = useState<File | null>(null)
   const [preview, setPreview] = useState<string | null>(null)
   const [status, setStatus] = useState('')
@@ -23,17 +25,17 @@ function ImageCrop() {
       }
       reader.readAsDataURL(selectedFile)
     } else {
-      setStatus('請選擇有效的圖片文件')
+      setStatus(t('errors.invalidFile'))
     }
   }
 
   const handleResize = async () => {
     if (!file || !preview) {
-      setStatus('請先選擇圖片')
+      setStatus(t('errors.fileRequired'))
       return
     }
 
-    setStatus('處理中...')
+    setStatus(t('imageTools.crop.cropping'))
 
     try {
       const img = new Image()
@@ -69,15 +71,15 @@ function ImageCrop() {
             link.download = file.name.replace(/\.[^.]+$/, '-cropped$&')
             link.click()
             URL.revokeObjectURL(url)
-            setStatus('裁切完成！檔案已下載')
+            setStatus(t('imageTools.crop.success'))
           },
           'image/png',
           0.95
         )
       }
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-      setStatus('處理失敗：' + errorMessage)
+      const errorMessage = error instanceof Error ? error.message : t('errors.unknownError')
+      setStatus(t('errors.processingFailed', { message: errorMessage }))
       console.error(error)
     }
   }
@@ -92,8 +94,8 @@ function ImageCrop() {
 
   return (
     <div className="tool-page">
-      <h1>圖片裁切</h1>
-      <p>裁切和調整圖片尺寸</p>
+      <h1>{t('imageTools.crop.title')}</h1>
+      <p>{t('imageTools.crop.description')}</p>
 
       <AdBanner />
 
@@ -106,13 +108,13 @@ function ImageCrop() {
             onChange={handleFileChange}
           />
           <label htmlFor="image-file" className="file-input-label">
-            選擇圖片
+            {t('imageTools.crop.selectImage')}
           </label>
         </div>
 
         {file && (
           <div style={{ marginTop: '1rem' }}>
-            <h3>預設尺寸</h3>
+            <h3>{t('imageTools.crop.presets')}</h3>
             <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
               {presets.map((preset) => (
                 <button
@@ -131,7 +133,7 @@ function ImageCrop() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
               <div>
                 <label>
-                  寬度 (px):
+                  {t('imageTools.crop.width')}:
                   <input
                     type="number"
                     value={width}
@@ -142,7 +144,7 @@ function ImageCrop() {
               </div>
               <div>
                 <label>
-                  高度 (px):
+                  {t('imageTools.crop.height')}:
                   <input
                     type="number"
                     value={height}
@@ -156,7 +158,7 @@ function ImageCrop() {
         )}
 
         <button onClick={handleResize} disabled={!file}>
-          裁切圖片
+          {t('imageTools.crop.title')}
         </button>
 
         {status && (

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import App from './App.tsx'
 import './index.css'
+import './i18n/config'
 
 // 動態載入 Google AdSense
 const adsenseClientId = import.meta.env.VITE_ADSENSE_CLIENT_ID;

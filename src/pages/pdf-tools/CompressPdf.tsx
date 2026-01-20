@@ -1,8 +1,10 @@
 import { useState, ChangeEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import { PDFDocument } from 'pdf-lib'
 import AdBanner from '../../components/AdBanner'
 
 function CompressPdf() {
+  const { t } = useTranslation()
   const [file, setFile] = useState<File | null>(null)
   const [status, setStatus] = useState('')
   const [loading, setLoading] = useState(false)
@@ -17,18 +19,18 @@ function CompressPdf() {
       setStatus('')
       setCompressedSize(0)
     } else {
-      setStatus('請選擇有效的 PDF 文件')
+      setStatus(t('errors.invalidFile'))
     }
   }
 
   const handleCompress = async () => {
     if (!file) {
-      setStatus('請先選擇 PDF 文件')
+      setStatus(t('errors.fileRequired'))
       return
     }
 
     setLoading(true)
-    setStatus('壓縮中...')
+    setStatus(t('pdfTools.compressPdf.compressing'))
 
     try {
       const fileData = await file.arrayBuffer()
@@ -54,10 +56,10 @@ function CompressPdf() {
       URL.revokeObjectURL(url)
 
       const reduction = ((1 - compressedBlob.size / originalSize) * 100).toFixed(2)
-      setStatus(`壓縮完成！檔案已下載。減少了 ${reduction}%`)
+      setStatus(t('pdfTools.compressPdf.reduction', { percent: reduction }))
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-      setStatus('壓縮失敗：' + errorMessage)
+      const errorMessage = error instanceof Error ? error.message : t('errors.unknownError')
+      setStatus(t('errors.processingFailed', { message: errorMessage }))
       console.error(error)
     } finally {
       setLoading(false)
@@ -70,8 +72,8 @@ function CompressPdf() {
 
   return (
     <div className="tool-page">
-      <h1>壓縮 PDF</h1>
-      <p>減少 PDF 文件大小</p>
+      <h1>{t('pdfTools.compressPdf.title')}</h1>
+      <p>{t('pdfTools.compressPdf.description')}</p>
 
       <AdBanner />
 
@@ -84,22 +86,22 @@ function CompressPdf() {
             onChange={handleFileChange}
           />
           <label htmlFor="pdf-file" className="file-input-label">
-            選擇 PDF 文件
+            {t('pdfTools.compressPdf.selectFile')}
           </label>
         </div>
 
         {file && (
           <div className="file-info">
             <p>已選擇: {file.name}</p>
-            <p>原始大小: {formatFileSize(originalSize)}</p>
+            <p>{t('pdfTools.compressPdf.originalSize')}: {formatFileSize(originalSize)}</p>
             {compressedSize > 0 && (
-              <p>壓縮後: {formatFileSize(compressedSize)}</p>
+              <p>{t('pdfTools.compressPdf.compressedSize')}: {formatFileSize(compressedSize)}</p>
             )}
           </div>
         )}
 
         <button onClick={handleCompress} disabled={!file || loading}>
-          {loading ? '壓縮中...' : '壓縮 PDF'}
+          {loading ? t('pdfTools.compressPdf.compressing') : t('pdfTools.compressPdf.title')}
         </button>
 
         {status && (

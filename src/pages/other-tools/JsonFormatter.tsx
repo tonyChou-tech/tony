@@ -1,7 +1,9 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import AdBanner from '../../components/AdBanner'
 
 function JsonFormatter() {
+  const { t } = useTranslation()
   const [input, setInput] = useState('')
   const [output, setOutput] = useState('')
   const [status, setStatus] = useState('')
@@ -11,10 +13,10 @@ function JsonFormatter() {
       const parsed = JSON.parse(input)
       const formatted = JSON.stringify(parsed, null, 2)
       setOutput(formatted)
-      setStatus('格式化成功')
+      setStatus(t('otherTools.jsonFormatter.success', { action: t('otherTools.jsonFormatter.format') }))
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-      setStatus('錯誤：' + errorMessage)
+      const errorMessage = error instanceof Error ? error.message : t('errors.unknownError')
+      setStatus(t('errors.processingFailed', { message: errorMessage }))
       setOutput('')
     }
   }
@@ -24,17 +26,17 @@ function JsonFormatter() {
       const parsed = JSON.parse(input)
       const minified = JSON.stringify(parsed)
       setOutput(minified)
-      setStatus('壓縮成功')
+      setStatus(t('otherTools.jsonFormatter.success', { action: t('otherTools.jsonFormatter.minify') }))
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-      setStatus('錯誤：' + errorMessage)
+      const errorMessage = error instanceof Error ? error.message : t('errors.unknownError')
+      setStatus(t('errors.processingFailed', { message: errorMessage }))
       setOutput('')
     }
   }
 
   const handleCopy = () => {
     navigator.clipboard.writeText(output)
-    setStatus('已複製到剪貼簿')
+    setStatus(t('common.success'))
   }
 
   const handleClear = () => {
@@ -45,14 +47,14 @@ function JsonFormatter() {
 
   return (
     <div className="tool-page">
-      <h1>JSON 格式化工具</h1>
-      <p>格式化、壓縮和驗證 JSON 數據</p>
+      <h1>{t('otherTools.jsonFormatter.title')}</h1>
+      <p>{t('otherTools.jsonFormatter.description')}</p>
 
       <AdBanner />
 
       <div className="tool-card">
         <div>
-          <h3>輸入 JSON</h3>
+          <h3>{t('otherTools.jsonFormatter.input')}</h3>
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -71,9 +73,9 @@ function JsonFormatter() {
         </div>
 
         <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-          <button onClick={handleFormat}>格式化</button>
-          <button onClick={handleMinify}>壓縮</button>
-          <button onClick={handleClear}>清除</button>
+          <button onClick={handleFormat}>{t('otherTools.jsonFormatter.format')}</button>
+          <button onClick={handleMinify}>{t('otherTools.jsonFormatter.minify')}</button>
+          <button onClick={handleClear}>{t('common.clear')}</button>
         </div>
 
         {status && (
@@ -85,8 +87,8 @@ function JsonFormatter() {
         {output && (
           <div style={{ marginTop: '2rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h3>輸出</h3>
-              <button onClick={handleCopy}>複製</button>
+              <h3>{t('otherTools.jsonFormatter.output')}</h3>
+              <button onClick={handleCopy}>{t('common.copy')}</button>
             </div>
             <textarea
               value={output}

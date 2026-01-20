@@ -1,8 +1,10 @@
 import { useState, ChangeEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import AdBanner from '../../components/AdBanner'
 import type { OutputFormat } from '../../types'
 
 function ImageConvert() {
+  const { t } = useTranslation()
   const [file, setFile] = useState<File | null>(null)
   const [preview, setPreview] = useState<string | null>(null)
   const [status, setStatus] = useState<string>('')
@@ -20,17 +22,17 @@ function ImageConvert() {
       }
       reader.readAsDataURL(selectedFile)
     } else {
-      setStatus('請選擇有效的圖片文件')
+      setStatus(t('errors.invalidFile'))
     }
   }
 
   const handleConvert = async () => {
     if (!file || !preview) {
-      setStatus('請先選擇圖片')
+      setStatus(t('errors.fileRequired'))
       return
     }
 
-    setStatus('轉換中...')
+    setStatus(t('imageTools.convert.converting'))
 
     try {
       const img = new Image()
@@ -52,7 +54,7 @@ function ImageConvert() {
         canvas.toBlob(
           (blob) => {
             if (!blob) {
-              setStatus('轉換失敗')
+              setStatus(t('errors.processingFailed', { message: '轉換失敗' }))
               return
             }
 
@@ -62,23 +64,23 @@ function ImageConvert() {
             link.download = file.name.replace(/\.[^.]+$/, `.${outputFormat}`)
             link.click()
             URL.revokeObjectURL(url)
-            setStatus(`轉換完成！已轉換為 ${outputFormat.toUpperCase()} 格式`)
+            setStatus(t('imageTools.convert.success', { format: outputFormat.toUpperCase() }))
           },
           `image/${outputFormat}`,
           0.95
         )
       }
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : '未知錯誤'
-      setStatus('轉換失敗：' + errorMessage)
+      const errorMessage = error instanceof Error ? error.message : t('errors.unknownError')
+      setStatus(t('errors.processingFailed', { message: errorMessage }))
       console.error(error)
     }
   }
 
   return (
     <div className="tool-page">
-      <h1>圖片轉檔</h1>
-      <p>轉換圖片格式 (JPG, PNG, WebP 等)</p>
+      <h1>{t('imageTools.convert.title')}</h1>
+      <p>{t('imageTools.convert.description')}</p>
 
       <AdBanner />
 
@@ -91,14 +93,14 @@ function ImageConvert() {
             onChange={handleFileChange}
           />
           <label htmlFor="image-file" className="file-input-label">
-            選擇圖片
+            {t('imageTools.convert.selectImage')}
           </label>
         </div>
 
         {file && (
           <div style={{ marginTop: '1rem' }}>
             <label>
-              輸出格式:
+              {t('imageTools.convert.outputFormat')}:
               <select
                 value={outputFormat}
                 onChange={(e) => setOutputFormat(e.target.value as OutputFormat)}
@@ -113,7 +115,7 @@ function ImageConvert() {
         )}
 
         <button onClick={handleConvert} disabled={!file}>
-          開始轉換
+          {t('common.upload')}
         </button>
 
         {status && (
@@ -124,7 +126,7 @@ function ImageConvert() {
 
         {preview && (
           <div style={{ marginTop: '2rem' }}>
-            <h3>預覽</h3>
+            <h3>{t('imageTools.convert.preview')}</h3>
             <img src={preview} alt="Preview" style={{ maxWidth: '100%', maxHeight: '400px' }} />
           </div>
         )}

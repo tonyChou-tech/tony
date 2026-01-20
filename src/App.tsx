@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 // Pages
 import Home from './pages/Home'
@@ -20,6 +21,8 @@ import Navigation from './components/Navigation'
 import AdBanner from './components/AdBanner'
 
 function App() {
+  const { t } = useTranslation()
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navigation />
@@ -53,7 +56,7 @@ function App() {
       </main>
 
       <footer className="bg-gray-900 text-white text-center py-8 mt-16">
-        <p>&copy; 2024 線上工具集 - 所有工具皆在瀏覽器本地運行，確保您的隱私安全</p>
+        <p>{t('footer.copyright')}</p>
       </footer>
     </div>
   )

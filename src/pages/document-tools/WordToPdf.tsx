@@ -1,7 +1,9 @@
 import { useState, ChangeEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import AdBanner from '../../components/AdBanner'
 
 function WordToPdf() {
+  const { t } = useTranslation()
   const [file, setFile] = useState<File | null>(null)
   const [status, setStatus] = useState('')
 
@@ -14,13 +16,13 @@ function WordToPdf() {
       setFile(selectedFile)
       setStatus('')
     } else {
-      setStatus('請選擇有效的 Word 文件 (.doc 或 .docx)')
+      setStatus(t('errors.invalidFile'))
     }
   }
 
   const handleConvert = () => {
     if (!file) {
-      setStatus('請先選擇 Word 文件')
+      setStatus(t('errors.fileRequired'))
       return
     }
 
@@ -31,8 +33,8 @@ function WordToPdf() {
 
   return (
     <div className="tool-page">
-      <h1>Word 轉 PDF</h1>
-      <p>將 Word 文檔轉換為 PDF 格式</p>
+      <h1>{t('documentTools.wordToPdf.title')}</h1>
+      <p>{t('documentTools.wordToPdf.description')}</p>
 
       <AdBanner />
 
@@ -45,7 +47,7 @@ function WordToPdf() {
             onChange={handleFileChange}
           />
           <label htmlFor="word-file" className="file-input-label">
-            選擇 Word 文件
+            {t('documentTools.wordToPdf.title')}
           </label>
         </div>
 
@@ -57,7 +59,7 @@ function WordToPdf() {
         )}
 
         <button onClick={handleConvert} disabled={!file}>
-          轉換為 PDF
+          {t('documentTools.wordToPdf.title')}
         </button>
 
         {status && (

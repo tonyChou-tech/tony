@@ -1,8 +1,10 @@
 import { useState, ChangeEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import imageCompression from 'browser-image-compression'
 import AdBanner from '../../components/AdBanner'
 
 function ImageCompress() {
+  const { t } = useTranslation()
   const [file, setFile] = useState<File | null>(null)
   const [originalPreview, setOriginalPreview] = useState<string | null>(null)
   const [compressedPreview, setCompressedPreview] = useState<string | null>(null)
@@ -28,18 +30,18 @@ function ImageCompress() {
       }
       reader.readAsDataURL(selectedFile)
     } else {
-      setStatus('請選擇有效的圖片文件')
+      setStatus(t('errors.invalidFile'))
     }
   }
 
   const handleCompress = async () => {
     if (!file) {
-      setStatus('請先選擇圖片')
+      setStatus(t('errors.fileRequired'))
       return
     }
 
     setLoading(true)
-    setStatus('壓縮中...')
+    setStatus(t('imageTools.compress.compressing'))
 
     try {
       const options = {
@@ -58,7 +60,7 @@ function ImageCompress() {
           setCompressedPreview(reader.result)
         }
         const reduction = ((1 - compressedFile.size / originalSize) * 100).toFixed(2)
-        setStatus(`壓縮完成！減少了 ${reduction}%`)
+        setStatus(t('imageTools.compress.reduction', { percent: reduction }))
       }
       reader.readAsDataURL(compressedFile)
 
@@ -70,8 +72,8 @@ function ImageCompress() {
       link.click()
       URL.revokeObjectURL(url)
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-      setStatus('壓縮失敗：' + errorMessage)
+      const errorMessage = error instanceof Error ? error.message : t('errors.unknownError')
+      setStatus(t('errors.processingFailed', { message: errorMessage }))
       console.error(error)
     } finally {
       setLoading(false)
@@ -84,8 +86,8 @@ function ImageCompress() {
 
   return (
     <div className="tool-page">
-      <h1>圖片壓縮</h1>
-      <p>壓縮圖片大小，同時保持良好的畫質</p>
+      <h1>{t('imageTools.compress.title')}</h1>
+      <p>{t('imageTools.compress.description')}</p>
 
       <AdBanner />
 
@@ -98,14 +100,14 @@ function ImageCompress() {
             onChange={handleFileChange}
           />
           <label htmlFor="image-file" className="file-input-label">
-            選擇圖片
+            {t('imageTools.compress.selectImage')}
           </label>
         </div>
 
         {file && (
           <div style={{ marginTop: '1rem' }}>
             <label>
-              壓縮品質: {(quality * 100).toFixed(0)}%
+              {t('imageTools.compress.quality')}: {(quality * 100).toFixed(0)}%
               <input
                 type="range"
                 min="0.1"
@@ -120,7 +122,7 @@ function ImageCompress() {
         )}
 
         <button onClick={handleCompress} disabled={!file || loading}>
-          {loading ? '壓縮中...' : '開始壓縮'}
+          {loading ? t('imageTools.compress.compressing') : t('common.upload')}
         </button>
 
         {status && (
@@ -133,14 +135,14 @@ function ImageCompress() {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '2rem' }}>
             {originalPreview && (
               <div>
-                <h3>原始圖片</h3>
+                <h3>{t('imageTools.compress.original')}</h3>
                 <img src={originalPreview} alt="Original" style={{ maxWidth: '100%' }} />
                 <p>大小: {formatFileSize(originalSize)}</p>
               </div>
             )}
             {compressedPreview && (
               <div>
-                <h3>壓縮後</h3>
+                <h3>{t('imageTools.compress.compressed')}</h3>
                 <img src={compressedPreview} alt="Compressed" style={{ maxWidth: '100%' }} />
                 <p>大小: {formatFileSize(compressedSize)}</p>
               </div>

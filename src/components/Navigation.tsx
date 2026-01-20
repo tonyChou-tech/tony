@@ -1,14 +1,17 @@
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import LanguageSwitcher from './LanguageSwitcher'
 
 function Navigation() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
+  const { t } = useTranslation()
 
   return (
     <nav className="bg-gray-900 shadow-lg sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-8 py-4 flex justify-between items-center">
         <Link to="/" className="text-2xl font-bold text-primary hover:text-primary-hover transition-colors">
-          線上工具集
+          {t('home.title')}
         </Link>
 
         <ul className="flex gap-8 list-none m-0 p-0">
@@ -18,7 +21,7 @@ function Navigation() {
             onMouseLeave={() => setOpenDropdown(null)}
           >
             <span className="text-white cursor-pointer py-2 block hover:text-primary transition-colors">
-              PDF 工具
+              {t('navigation.pdfTools')}
             </span>
             <ul className={`absolute top-full left-0 bg-gray-800 min-w-[200px] list-none p-2 rounded shadow-xl
               ${openDropdown === 'pdf' ? 'block' : 'hidden'} group-hover:block`}>
@@ -27,7 +30,7 @@ function Navigation() {
                   to="/pdf-tools/pdf-to-word"
                   className="block py-3 px-4 text-white no-underline rounded hover:bg-primary transition-colors"
                 >
-                  PDF 轉 Word
+                  {t('pdfTools.pdfToWord.title')}
                 </Link>
               </li>
               <li>
@@ -35,7 +38,7 @@ function Navigation() {
                   to="/pdf-tools/pdf-to-image"
                   className="block py-3 px-4 text-white no-underline rounded hover:bg-primary transition-colors"
                 >
-                  PDF 轉圖片
+                  {t('pdfTools.pdfToImage.title')}
                 </Link>
               </li>
               <li>
@@ -43,7 +46,7 @@ function Navigation() {
                   to="/pdf-tools/merge-pdf"
                   className="block py-3 px-4 text-white no-underline rounded hover:bg-primary transition-colors"
                 >
-                  合併 PDF
+                  {t('pdfTools.mergePdf.title')}
                 </Link>
               </li>
               <li>
@@ -51,7 +54,7 @@ function Navigation() {
                   to="/pdf-tools/compress-pdf"
                   className="block py-3 px-4 text-white no-underline rounded hover:bg-primary transition-colors"
                 >
-                  壓縮 PDF
+                  {t('pdfTools.compressPdf.title')}
                 </Link>
               </li>
             </ul>
@@ -63,7 +66,7 @@ function Navigation() {
             onMouseLeave={() => setOpenDropdown(null)}
           >
             <span className="text-white cursor-pointer py-2 block hover:text-primary transition-colors">
-              圖片工具
+              {t('navigation.imageTools')}
             </span>
             <ul className={`absolute top-full left-0 bg-gray-800 min-w-[200px] list-none p-2 rounded shadow-xl
               ${openDropdown === 'image' ? 'block' : 'hidden'} group-hover:block`}>
@@ -72,7 +75,7 @@ function Navigation() {
                   to="/image-tools/compress"
                   className="block py-3 px-4 text-white no-underline rounded hover:bg-primary transition-colors"
                 >
-                  圖片壓縮
+                  {t('imageTools.compress.title')}
                 </Link>
               </li>
               <li>
@@ -80,7 +83,7 @@ function Navigation() {
                   to="/image-tools/convert"
                   className="block py-3 px-4 text-white no-underline rounded hover:bg-primary transition-colors"
                 >
-                  圖片轉檔
+                  {t('imageTools.convert.title')}
                 </Link>
               </li>
               <li>
@@ -88,7 +91,7 @@ function Navigation() {
                   to="/image-tools/crop"
                   className="block py-3 px-4 text-white no-underline rounded hover:bg-primary transition-colors"
                 >
-                  圖片裁切
+                  {t('imageTools.crop.title')}
                 </Link>
               </li>
             </ul>
@@ -100,7 +103,7 @@ function Navigation() {
             onMouseLeave={() => setOpenDropdown(null)}
           >
             <span className="text-white cursor-pointer py-2 block hover:text-primary transition-colors">
-              文件工具
+              {t('navigation.documentTools')}
             </span>
             <ul className={`absolute top-full left-0 bg-gray-800 min-w-[200px] list-none p-2 rounded shadow-xl
               ${openDropdown === 'document' ? 'block' : 'hidden'} group-hover:block`}>
@@ -109,7 +112,7 @@ function Navigation() {
                   to="/document-tools/word-to-pdf"
                   className="block py-3 px-4 text-white no-underline rounded hover:bg-primary transition-colors"
                 >
-                  Word 轉 PDF
+                  {t('documentTools.wordToPdf.title')}
                 </Link>
               </li>
               <li>
@@ -117,7 +120,7 @@ function Navigation() {
                   to="/document-tools/excel-to-csv"
                   className="block py-3 px-4 text-white no-underline rounded hover:bg-primary transition-colors"
                 >
-                  Excel 轉 CSV
+                  {t('documentTools.excelToCsv.title')}
                 </Link>
               </li>
             </ul>
@@ -129,7 +132,7 @@ function Navigation() {
             onMouseLeave={() => setOpenDropdown(null)}
           >
             <span className="text-white cursor-pointer py-2 block hover:text-primary transition-colors">
-              其他工具
+              {t('navigation.otherTools')}
             </span>
             <ul className={`absolute top-full left-0 bg-gray-800 min-w-[200px] list-none p-2 rounded shadow-xl
               ${openDropdown === 'other' ? 'block' : 'hidden'} group-hover:block`}>
@@ -138,7 +141,7 @@ function Navigation() {
                   to="/other-tools/json-formatter"
                   className="block py-3 px-4 text-white no-underline rounded hover:bg-primary transition-colors"
                 >
-                  JSON 格式化
+                  {t('otherTools.jsonFormatter.title')}
                 </Link>
               </li>
               <li>
@@ -146,7 +149,7 @@ function Navigation() {
                   to="/other-tools/base64"
                   className="block py-3 px-4 text-white no-underline rounded hover:bg-primary transition-colors"
                 >
-                  Base64 編碼/解碼
+                  {t('otherTools.base64.title')}
                 </Link>
               </li>
               <li>
@@ -154,10 +157,13 @@ function Navigation() {
                   to="/other-tools/qr-code"
                   className="block py-3 px-4 text-white no-underline rounded hover:bg-primary transition-colors"
                 >
-                  QR Code 生成器
+                  {t('otherTools.qrCode.title')}
                 </Link>
               </li>
             </ul>
+          </li>
+          <li>
+            <LanguageSwitcher />
           </li>
         </ul>
       </div>
