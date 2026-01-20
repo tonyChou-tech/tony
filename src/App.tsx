@@ -21,10 +21,10 @@ function App() {
   const { t } = useTranslation();
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-dark-bg">
       <Navigation />
 
-      <main className="flex-1 container">
+      <main className="flex-1 pt-0">
         <Routes>
           <Route path="/" element={<Home />} />
 
