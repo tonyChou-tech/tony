@@ -13,6 +13,7 @@ import ExcelToCsv from "./pages/document-tools/ExcelToCsv";
 import JsonFormatter from "./pages/other-tools/JsonFormatter";
 import Base64Tool from "./pages/other-tools/Base64Tool";
 import QrCodeGenerator from "./pages/other-tools/QrCodeGenerator";
+import CurrencyConverter from "./pages/other-tools/CurrencyConverter";
 
 // Components
 import Navigation from "./components/Navigation";
@@ -48,6 +49,7 @@ function App() {
           />
           <Route path="/other-tools/base64" element={<Base64Tool />} />
           <Route path="/other-tools/qr-code" element={<QrCodeGenerator />} />
+          <Route path="/other-tools/currency-converter" element={<CurrencyConverter />} />
         </Routes>
       </main>
 

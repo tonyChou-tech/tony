@@ -170,22 +170,7 @@ function Navigation() {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <>
-          {/* Mobile Menu Overlay */}
-          <div
-            className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-            onClick={closeMobileMenu}
-          />
-
-          {/* Mobile Menu Panel */}
-          <div
-            className="mobile-menu fixed left-0 right-0 bg-dark-bg overflow-y-auto z-50 lg:hidden border-t border-gray-800"
-            style={{
-              top: '56px',
-              height: 'calc(100vh - 56px)',
-              maxHeight: 'calc(100vh - 56px)'
-            }}
-          >
+        <div className="lg:hidden bg-dark-bg border-t border-gray-800">
         <ul className="flex flex-col list-none m-0 p-0">
           {navItems.map((navItem) => (
             <li key={navItem.id} className="border-b border-gray-700">
@@ -240,8 +225,7 @@ function Navigation() {
             </div>
           </li>
         </ul>
-          </div>
-        </>
+        </div>
       )}
     </nav>
   )
